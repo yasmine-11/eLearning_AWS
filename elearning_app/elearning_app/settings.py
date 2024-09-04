@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-=n)e92d!$@aj_8b=1bm1^$ox@)coa=xzz69*k(mk)59bt!^0u_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1',]
+ALLOWED_HOSTS = ['5.21.52.144', 'localhost', '127.0.0.1',]
 
 
 # Application definition
@@ -95,8 +95,12 @@ ASGI_APPLICATION = 'elearning_app.routing.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'elearning_aws',
+        'USER': 'admin',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': ''
     }
 }
 
