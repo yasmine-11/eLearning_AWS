@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Create Course{% endblock %}
+
+{% block hero_title %}Create a New Course{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <div class="container">
+
+            <div class="box">
+                <h1 class="title is-4">Create a New Course</h1>
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="field">
+                        <label class="label" for="{{ form.name.id_for_label }}">Course Name</label>
+                        <div class="control">
+                            <input class="input" type="text" name="name" id="{{ form.name.id_for_label }}" value="{{ form.name.value }}">
+                        </div>
+                        {% if form.name.errors %}
+                            <p class="help is-danger">{{ form.name.errors }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="{{ form.description.id_for_label }}">Description</label>
+                        <div class="control">
+                            <textarea class="textarea" name="description" id="{{ form.description.id_for_label }}">{{ form.description.value }}</textarea>
+                        </div>
+                        {% if form.description.errors %}
+                            <p class="help is-danger">{{ form.description.errors }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="{{ form.deadline.id_for_label }}">Deadline</label>
+                        <div class="control">
+                            <input class="input" type="date" name="deadline" id="{{ form.deadline.id_for_label }}" value="{{ form.deadline.value }}">
+                        </div>
+                        {% if form.deadline.errors %}
+                            <p class="help is-danger">{{ form.deadline.errors }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-info" type="submit">Create Course</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}

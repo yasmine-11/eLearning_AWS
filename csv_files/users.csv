@@ -1,0 +1,11 @@
+username,password,real_name,photo,user_type
+teacher1,test1234,John Doe,photos/photo1.jpg,teacher
+teacher2,test1234,Jane Smith,photos/photo2.jpg,teacher
+teacher3,test1234,Alice Johnson,photos/photo3.jpg,teacher
+student1,test1234,Hannah Miller,photos/photo4.jpg,student
+student2,test1234,Bob Brown,photos/photo5.jpg,student
+student3,test1234,Carol White,photos/photo6.jpg,student
+student4,test1234,David Black,photos/photo7.jpg,student
+student5,test1234,Eve Green,photos/photo8.jpg,student
+student6,test1234,Frank Harris,photos/photo9.jpg,student
+student7,test1234,Grace Lee,photos/photo10.jpg,student

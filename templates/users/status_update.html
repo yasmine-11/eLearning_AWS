@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Status Update{% endblock %}
+
+{% block hero_title %}Post a Status Update{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <div class="container">
+
+            <div class="box">
+                <h1 class="title is-4">Post a Status Update</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label class="label" for="{{ form.content.id_for_label }}">Content</label>
+                        <div class="control">
+                            <textarea id="{{ form.content.id_for_label }}" name="content" class="textarea" placeholder="Write your status update here...">{{ form.content.value }}</textarea>
+                        </div>
+                        {% if form.content.errors %}
+                            <p class="help is-danger">{{ form.content.errors }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-info" type="submit">Post</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <a class="button is-primary" href="{% url 'home' %}">Back to Home</a>
+
+        </div>
+    </section>
+{% endblock %}

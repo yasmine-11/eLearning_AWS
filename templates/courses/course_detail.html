@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.name }}{% endblock %}
+
+{% block hero_title %}{{ course.name }}{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <div class="container">
+
+            <div class="box">
+                <!-- Course Header -->
+                <div class="columns is-vcentered">
+                    <div class="column">
+                        <h2 class="title is-3">{{ course.name }}</h2>
+                        <p><strong>Teacher:</strong> <a href="{% url 'user_profile' course.teacher.id %}">{{ course.teacher.real_name }}</a></p>
+                        <p>{{ course.description }}</p>
+                    </div>
+                    <div class="column has-text-right">
+                        {% if can_upload_materials %}
+                            <a class="button is-info mr-5" href="{% url 'upload_material' course.id %}">Upload Material</a>
+                        {% endif %}
+                        {% if is_enrolled %}
+                            <a class="button is-info mr-5" href="{% url 'leave_feedback' course.id %}">Leave Feedback</a>
+                        {% else %}
+                            {% if user.user_type == 'student' %}
+                                <a class="button is-info mr-5" href="{% url 'enroll_in_course' course.id %}">Enroll in Course</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Course Materials -->
+                <div class="section">
+                    <h3 class="title is-4">Course Materials</h3>
+                    <div class="content">
+                        <ul>
+                            {% for material in materials %}
+                                <li class="mb-4">
+                                    <strong>{{ material.title }}</strong> <span class="tag is-light">{{ material.uploaded_at|date:"M d, Y" }}</span>
+                                    <br>
+                                    {% if material.file_type == "pdf" %}
+                                        <a class="button is-link is-light mt-2" href="{{ material.file_url }}" target="_blank">View PDF</a>
+                                    {% elif material.file_type == "image" %}
+                                        <figure class="image mt-2">
+                                            <img src="{{ material.file_url }}" alt="{{ material.title }}" style="max-width: 100%; height: auto;">
+                                        </figure>
+                                    {% elif material.file_type == "video" %}
+                                        <figure class="image mt-2">
+                                            <video class="video" width="640" height="360" controls autoplay>
+                                                <source src="{{ material.file_url }}" type="video/mp4">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        </figure>
+                                    {% else %}
+                                        <a class="button is-link is-light mt-2" href="{{ material.file_url }}" download>Download File: {{ material.title }}</a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Feedback Section -->
+                <div class="section">
+                    <h3 class="title is-4">Feedback</h3>
+                    <div class="content">
+                        <ul>
+                            {% for feedback in feedbacks %}
+                                <li class="mb-4">{{ feedback.comment }} 
+                                    <span class="tag is-light">by&nbsp;<a href="{% url 'user_profile' feedback.student.id %}">{{ feedback.student.username }}</a>&nbsp;on&nbsp;{{ feedback.created_at|date:"M d, Y" }}</span>
+                                </li>
+                            {% empty %}
+                                <li>No feedback has been submitted for this course yet.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                {% if can_upload_materials %}
+                <!-- Enrolled Students Section -->
+                <div class="section">
+                    <h3 class="title is-4">Enrolled Students</h3>
+                    <ul>
+                        {% for enrollment in course.enrollments.all %}
+                            <li class="mb-3">
+                                <div class="columns is-vcentered">
+                                    <div class="column is-one-third">
+                                        <a href="{% url 'user_profile' enrollment.student.id %}">{{ enrollment.student.username }}</a>
+                                    </div>
+                                    <div class="column">
+                                        {% if not enrollment.is_blocked %}
+                                            <a class="button is-danger is-light is-small ml-1" href="{% url 'block_student' course.id enrollment.student.id %}">Block</a>
+                                            <a class="button is-danger is-light is-small ml-1" href="{% url 'remove_student' course.id enrollment.student.id %}">Remove</a>
+                                        {% else %}
+                                            <a class="button is-warning is-light is-small ml-1" href="{% url 'unblock_student' course.id enrollment.student.id %}">Unblock</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li>No students are enrolled in this course.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <!-- Live Chat Section -->
+            <div class="section">
+                <h3 class="title is-4">Live Chat</h3>
+                <div id="chat-log" class="box content">
+                    {% for message in chat_messages %}
+                        <p><strong>{{ message.user.username }}:</strong> {{ message.message }}</p>
+                        {% if message.file %}
+                            <p><strong>{{ message.user.username }}:</strong> sent a file: <a href="{{ message.file.url }}">Download file</a></p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <form method="post" enctype="multipart/form-data" action="{% url 'upload_chat_file' course.id %}" class="box">
+                    {% csrf_token %}
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" id="chat-message-input" type="text" name="message" placeholder="Enter message" required>
+                        </div>
+                    </div>
+                    {% if user.user_type == 'teacher' %}
+                        <div class="field">
+                            <div class="control">
+                                <input class="input" type="file" name="file">
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-info" id="chat-message-submit" type="submit">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <a class="button is-primary mt-5" href="{% url 'home' %}">Return Home</a>
+        </div>
+    </section>
+
+    
+    <script>
+        const roomName = "{{ chat_room_name }}";
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/course/' + roomName + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            console.log('Received message:', data);
+
+            const chatLog = document.querySelector('#chat-log');
+            const newMessage = document.createElement('p');
+            newMessage.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
+            chatLog.appendChild(newMessage);
+
+            if (data.file_url) {
+                const fileLink = document.createElement('a');
+                fileLink.href = data.file_url;
+                fileLink.textContent = 'Download file';
+
+                const fileMessage = document.createElement('p');
+                fileMessage.appendChild(fileLink);
+                chatLog.appendChild(fileMessage);
+            }
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+    </script>
+{% endblock %}

@@ -1,0 +1,21 @@
+course_id,student_id,comment,created_at
+1,4,Great course, very informative.,2024-08-02 11:00:00
+1,5,The material was a bit too basic.,2024-08-03 12:00:00
+2,6,Excellent depth on web technologies.,2024-08-04 13:00:00
+2,7,Could use more examples and exercises.,2024-08-06 14:00:00
+3,8,Really enjoyed the data science projects.,2024-08-07 15:00:00
+3,9,The course was a bit too fast-paced.,2024-08-08 16:00:00
+4,10,Very useful for learning machine learning.,2024-08-09 17:00:00
+4,4,The course content was quite advanced.,2024-08-10 18:00:00
+5,5,Interesting but needs more practical examples.,2024-08-11 19:00:00
+5,6,Good overview of cybersecurity principles.,2024-08-12 20:00:00
+6,7,Interesting but needs more practical examples.,2024-08-11 19:00:00
+6,8,Great course, very informative.,2024-08-12 20:00:00
+7,9,Interesting but needs more practical examples.,2024-08-11 19:00:00
+7,10,The material was a bit too basic.,2024-08-12 20:00:00
+8,4,Interesting but needs more practical examples.,2024-08-11 19:00:00
+8,5,Could use more examples and exercises.,2024-08-12 20:00:00
+9,6,Interesting but needs more practical examples.,2024-08-11 19:00:00
+9,7,very interesting subject, I love it!.,2024-08-12 20:00:00
+10,8,Interesting topic but the explanations aren't detailed.,2024-08-11 19:00:00
+10,9,Very intresting subject, I can't wait to delve into it!.,2024-08-12 20:00:00

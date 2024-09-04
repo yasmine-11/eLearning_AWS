@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <div class="container">
+            <div class="box">
+                <h2 class="title is-3">Notifications</h2>
+                <ul>
+                    {% for notification in notifications %}
+                        <li class="notification-item">
+                            <div class="content">
+                                <strong>{{ notification.message }}</strong>
+                                <span class="tag is-info is-light">{{ notification.created_at|date:"M d, Y H:i" }}</span>
+                            </div>
+                            {% if not notification.is_read %}
+                                <span class="tag is-danger is-light">New</span>
+                            {% endif %}
+                        </li>
+                    {% empty %}
+                        <li>No notifications at the moment.</li>
+                    {% endfor %}
+                </ul>
+                <a class="button is-info mt-5" href="{% url 'home' %}">Return Home</a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Course Material{% endblock %}
+
+{% block hero_title %}Upload Material for {{ course.name }}{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <div class="container">
+
+            <div class="box">
+                <h1 class="title is-4">Upload Material for {{ course.name }}</h1>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="field">
+                        <label class="label" for="{{ form.title.id_for_label }}">Title</label>
+                        <div class="control">
+                            <input class="input" type="text" name="title" id="{{ form.title.id_for_label }}" value="{{ form.title.value }}">
+                        </div>
+                        {% if form.title.errors %}
+                            <p class="help is-danger">{{ form.title.errors }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="{{ form.file.id_for_label }}">File</label>
+                        <div class="control">
+                            <input class="input" type="file" name="file" id="{{ form.file.id_for_label }}">
+                        </div>
+                        {% if form.file.errors %}
+                            <p class="help is-danger">{{ form.file.errors }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-info" type="submit">Upload</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </section>
+{% endblock %}

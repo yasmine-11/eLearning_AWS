@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}eLearning App{% endblock %}</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    </head>
+    <body>
+        <!-- Navigation Bar -->
+        <nav class="navbar is-info">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="{% url 'home' %}">
+                    <strong>eLearning App</strong>
+                </a>
+                <span class="navbar-burger burger" data-target="navbarMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-end">
+                    {% if user.is_authenticated %}
+                    <a class="navbar-item" href="{% url 'logout' %}">Logout</a>
+                    {% else %}
+                    <a class="navbar-item" href="{% url 'login' %}">Login</a>
+                    <a class="navbar-item" href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        {% block hero %}
+        <!-- Hero Section -->
+        <section class="hero is-light is-small">
+            <div class="hero-body">
+                <div class="container">
+                    <h1 class="title">
+                        {% block hero_title %}Welcome to eLearning App{% endblock %}
+                    </h1>
+                    <h2 class="subtitle">
+                        {% block hero_subtitle %}Your online learning platform{% endblock %}
+                    </h2>
+                </div>
+            </div>
+        </section>
+        {% endblock %}
+
+        <!-- Main Content -->
+        <div class="container">
+            {% block content %}
+            <!-- Content -->
+            {% endblock %}
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <strong>eLearning App</strong> for [CM3035].
+                </p>
+                <p>
+                    <strong>eLearning App Swagger API Documentation: </strong> http://127.0.0.1:8080/swagger/.
+                </p>
+                <p>
+                    <strong>Admin Username: </strong> admin | <strong>Admin Passcode: </strong> admin123
+                </p>
+                <p>
+                    <strong>API links (you have to be logged in to access them): </strong>
+                </p>
+                <p>"users": http://127.0.0.1:8080/api/users/</p>
+                <p>"status-updates": http://127.0.0.1:8080/api/status-updates/</p>
+            </div>
+        </footer>
+
+        <!-- Scripts -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const burger = document.querySelector('.navbar-burger');
+                const menu = document.querySelector(`#${burger.dataset.target}`);
+
+                burger.addEventListener('click', () => {
+                    burger.classList.toggle('is-active');
+                    menu.classList.toggle('is-active');
+                });
+            });
+        </script>
+        
+    </body>
+</html>

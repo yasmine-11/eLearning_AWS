@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Student Home{% endblock %}
+
+{% block hero_title %}Welcome, {{ user.username }}{% endblock %}
+
+{% block content %}
+    <section class="section">
+        <div class="container">
+            <!-- Profiles Search -->
+            <div class="box">
+                <form method="get" action="{% url 'search_profiles' %}" class="field has-addons">
+                    <div class="control is-expanded">
+                        <input class="input" type="text" name="q" placeholder="Search profiles..." value="{{ query }}">
+                    </div>
+                    <div class="control">
+                        <button class="button is-info" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
+            <!-- Profile Section -->
+            <div class="box">
+                <div class="media">
+                    <div class="media-left">
+                        {% if user.photo %}
+                            <figure class="image is-128x128">
+                                <img class="is-rounded" src="{{ user.photo.url }}" alt="Profile Photo">
+                            </figure>
+                        {% else %}
+                            <p>No profile photo available.</p>
+                        {% endif %}
+                    </div>
+                    <div class="media-content">
+                        <h2 class="title is-4">Welcome, {{ user.username }} <span class="tag is-text">Student</span></h2>
+                        <p class="subtitle is-6">Real Name: {{ user.real_name }}</p>
+                        <ul class="mt-3">
+                            <!-- Notifications -->
+                            <li>
+                                <a class="button is-info" href="{% url 'notifications' %}">View Notifications</a>
+                                {% if unread_notifications_count > 0 %}
+                                    <span class="tag is-danger ml-2">{{ unread_notifications_count }} New</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>            
+            <!-- Status Updates -->
+            <div class="box">
+                <h3 class="title is-5">Status Updates</h3>
+                <ul>
+                    {% for status in status_updates %}
+                        <li>
+                            <a href="{% url 'user_profile' status.user.id %}">{{ status.user.username }}</a>: 
+                            {{ status.content }} ({{ status.created_at }})
+                        </li>
+                    {% empty %}
+                        <li>No status updates yet.</li>
+                    {% endfor %}
+                </ul>
+                <a class="button is-info mt-5" href="{% url 'status_update' %}">Post a Status Update</a>
+            </div>
+            <!-- Enrolled Courses -->
+            <div class="box">
+                <h3 class="title is-5">Your Enrolled Courses</h3>
+                <ul>
+                    {% for course in enrolled_courses %}
+                        <li>
+                            <a href="{% url 'course_detail' course.id %}">{{ course.name }}</a> - Deadline: {{ course.deadline }}
+                        </li>
+                    {% empty %}
+                        <li>You are not enrolled in any courses.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- Available Courses -->
+            <div class="box">
+                <h3 class="title is-5">Available Courses</h3>
+                <ul>
+                    {% for course in available_courses %}
+                        <li class="course-item">
+                            <div class="columns is-vcentered">
+                                <div class="column is-8">
+                                    <strong>{{ course.name }}</strong>
+                                </div>
+                                <div class="column is-4 has-text-right">
+                                    <a class="button is-small is-info" href="{% url 'course_detail' course.id %}">View</a>
+                                    <a class="button is-small is-primary" href="{% url 'enroll_in_course' course.id %}">Enroll</a>
+                                </div>
+                            </div>
+                        </li>
+                    {% empty %}
+                        <li>No courses available for enrollment.</li>
+                    {% endfor %}
+                </ul>
+            </div>            
+
+            <a class="button is-danger" href="{% url 'logout' %}">Logout</a>
+        </div>
+    </section>
+{% endblock %}
