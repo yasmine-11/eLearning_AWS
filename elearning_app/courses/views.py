@@ -47,6 +47,7 @@ def course_detail(request, course_id):
         is_enrolled = False
 
     chat_messages = ChatMessage.objects.filter(course=course).order_by('timestamp')
+    can_access_chat = request.user == course.teacher or is_enrolled # Check for chat access
 
     context = {
         'course': course,
@@ -57,6 +58,7 @@ def course_detail(request, course_id):
         'enrolled_students': enrolled_students,
         'chat_room_name': f'course_{course.id}_chat',  # Chat room ID
         'chat_messages': chat_messages,
+        'can_access_chat': can_access_chat,
     }
     return render(request, 'courses/course_detail.html', context)
 
