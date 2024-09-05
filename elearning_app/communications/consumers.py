@@ -74,4 +74,6 @@ class CourseChatConsumer(AsyncWebsocketConsumer):
             message=message,
             file=relative_path if user.user_type == 'teacher' else None  # Only save file if the user is a teacher
         )
+        print(f'Saved message: {chat_message}')
+        return chat_message
 
