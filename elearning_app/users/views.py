@@ -14,7 +14,10 @@ def register(request):
         form = UserRegistrationForm(request.POST, request.FILES)
 
         if form.is_valid():
-            user = form.save()
+             user = form.save(commit=False) 
+            user.username = user.username.lower()  # Convert the username to lowercase
+            user.save()
+
             user_type = form.cleaned_data.get('user_type')
 
             # Automatically add the user to the appropriate group
