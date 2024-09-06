@@ -14,7 +14,7 @@ def register(request):
         form = UserRegistrationForm(request.POST, request.FILES)
 
         if form.is_valid():
-             user = form.save(commit=False) 
+            user = form.save(commit=False) 
             user.username = user.username.lower()  # Convert the username to lowercase
             user.save()
 
