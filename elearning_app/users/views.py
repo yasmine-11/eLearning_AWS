@@ -38,14 +38,18 @@ def register(request):
 
 def user_login(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        # Make a copy of POST data to modify
+        request_data = request.POST.copy()
+        # Convert the username to lowercase
+        request_data['username'] = request_data['username'].lower()
+
+        # Pass the modified data to the AuthenticationForm
+        form = AuthenticationForm(request, data=request_data)
+        
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             return redirect('home')
-        else:
-            # If the form is not valid, it will return to the template with errors
-            return render(request, 'users/login.html', {'form': form})
     else:
         form = AuthenticationForm()
     return render(request, 'users/login.html', {'form': form})
